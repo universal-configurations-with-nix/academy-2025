@@ -1,0 +1,11 @@
+# Nix artifacts
+/result
+/.direnv/
+
+# Output artifacts
+src/**/*.pdf
+/*.pdf
+/*.html
+/build/
+/slides/
+/present/
