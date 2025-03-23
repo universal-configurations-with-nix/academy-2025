@@ -1,0 +1,15 @@
+theme: "Boadilla"
+mainfont: "CMU Serif"
+monofont: "CMU Typewriter Text"
+aspectratio: "169"
+
+colorlinks: true
+linkcolor: "." # Иначе заглавия са винаги в червено
+header-includes: |
+  \newtranslation[to=bulgarian]{Section}{Раздел}
+
+lang: bg
+subtitle: "Универсални конфигурации с Nix"
+author:
+  - Павел Атанасов
+  - Камен Младенов
