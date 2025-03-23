@@ -3,9 +3,8 @@
 /.direnv/
 
 # Output artifacts
-src/**/*.pdf
-/*.pdf
+*.pdf
+!/slides/*.pdf
 /*.html
 /build/
-/slides/
 /present/
