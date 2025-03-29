@@ -1,5 +1,5 @@
 # Nix artifacts
-/result
+result
 /.direnv/
 
 # Output artifacts

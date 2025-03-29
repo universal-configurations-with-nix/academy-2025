@@ -155,7 +155,7 @@ date: 03.04.2025
 
 - `nix-build` ще създаде този текстов файл и ще го запише в `/nix/store`
 
-### Пример
+### Пример ~text1.nix~
 
 ```nix
 with import <nixpkgs> { };
@@ -173,7 +173,7 @@ writeTextFile { name = "something.txt"; text = "Hello!"; }
   third line"; }
   ```
 
-- В Nix езикът има и так. нар. "многоредов низ", който автоматично премахва водещата идентация, когато тя не е значима:
+- В Nix езикът има и так. нар. "многоредов низ", който автоматично премахва водещата идентация, когато тя не е значима: ~text2.nix~
 
   ```nix
   with import <nixpkgs> { };
@@ -188,7 +188,7 @@ writeTextFile { name = "something.txt"; text = "Hello!"; }
 
 - Аналогично на `writeTextFile`, обаче създава изпълним shell скрипт
 
-### Пример
+### Пример ~script1.nix~
 
 ```nix
 with import <nixpkgs> { };
@@ -206,7 +206,7 @@ with import <nixpkgs> { };
 writeShellApplication { name = "script.sh"; text = "fastfetch"; }
 ```
 
-### Така добавяме зависимостта
+### Така добавяме зависимостта ~script2.nix~
 
 ```nix
 with import <nixpkgs> { };
@@ -243,7 +243,7 @@ runtimeInputs = [ fastfetch ]; text = "fastfetch"; }
 
 - Позволява ни да влезем в shell с всички зависимости на програмата
 
-### Пример
+### Пример ~script3.nix~
 
 ```nix
 with import <nixpkgs> { };
@@ -270,8 +270,7 @@ writeShellApplication {
 
 - `packages` определя наличните програми, `shellHook` изпълнява shell команди веднага преди съответния shell да се отвори
 
-### Пример
-
+### Пример ~shell1.nix~
 
 ```nix
 with import <nixpkgs> { };
