@@ -234,7 +234,8 @@ runtimeInputs = [ fastfetch ]; text = "fastfetch"; }
 
 - Съответно, `nix-store --realize` изпълнява (скрипта в) дадената деривация
 
-- `nix-build ./file.nix` е почти същото като `nix-instantiate ./file.nix && nix-store --realize /nix/store/....drv`
+- `nix-build ./file.nix` е почти същото като \
+  `nix-instantiate ./file.nix && nix-store --realize /nix/store/....drv`
 
 - `nix-store` също може да ни покаже самия скрипт, чрез флага `--print-env`
 
