@@ -1,0 +1,28 @@
+{
+  "depends": [
+    {
+      "method": "fetchzip",
+      "path": "/nix/store/3ha9jx6zafxb338r5xi1bydxnjsjppl5-source",
+      "rev": "5a7a7bafd1da23b25332316a7b888e6586f4177a",
+      "sha256": "10b3jmq9dhyfkj3r0jwk9zigrn048jb7xwh7vkbqar5wgfgmqljr",
+      "url": "https://github.com/soasme/nim-markdown/archive/5a7a7bafd1da23b25332316a7b888e6586f4177a.tar.gz",
+      "ref": "v0.8.8",
+      "packages": [
+        "markdown"
+      ],
+      "srcDir": "src"
+    },
+    {
+      "method": "fetchzip",
+      "path": "/nix/store/mccw3gnci2vs6p0iji6ajimvg6pwa4p5-source",
+      "rev": "e89077ec751f1308a0101c99aaefe57e55b59d45",
+      "sha256": "0gn6sy57lbpjavf2yxpv85vhlcsxrvli0y9ij5vhjrlhwgaiw6cz",
+      "url": "https://github.com/madprops/nap/archive/e89077ec751f1308a0101c99aaefe57e55b59d45.tar.gz",
+      "ref": "v5.2.0",
+      "packages": [
+        "nap"
+      ],
+      "srcDir": "src"
+    }
+  ]
+}
