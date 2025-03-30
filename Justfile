@@ -33,15 +33,17 @@ build input=join(".", "main.md") output_dir="." *EXTRA_ARGS="":
       exit 2
   fi
 
-  output_name="{{parent_directory(absolute_path(join(invocation_directory(), input)))}}"
-  cd "$output_name"
-  output_name="{{absolute_path(join(output_dir, "${output_name##*/}.pdf"))}}"
-  echo '"{{input}}" -> "'$output_name'"'
+  input_dir="{{parent_directory(absolute_path(join(invocation_directory(), input)))}}"
+  cd "$input_dir"
+  output_file="{{absolute_path(join(output_dir, "${input_dir##*/}.pdf"))}}"
+  echo '"{{input}}" -> "'$output_file'"'
 
+  input_file="{{input}}"
+  input_file="${input_file##*/}"
   pandoc --pdf-engine=xelatex -t beamer --slide-level=2       \
          --metadata-file="{{join(src_dir, "metadata.yaml")}}" \
-         -s {{input}}                                         \
-         -o "$output_name" {{EXTRA_ARGS}}
+         -s "$input_file"                                     \
+         -o "$output_file" {{EXTRA_ARGS}}
 
 # Like build, but PDF has incremental lists and navigation symbols
 build-presentable input=join(".", "main.md") output_dir=".": (build input output_dir "-i" "-V navigation=horizontal")
