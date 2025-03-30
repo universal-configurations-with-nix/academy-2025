@@ -7,12 +7,12 @@ date: 15.04.2025
 
 ::: nonincremental
 
-- Писахме програми на Nix езикът
-- Написахме няколко много прости пакети на 03.04.2025
+- Писахме програми на Nix езика
+- Написахме няколко много прости пакета на 03.04.2025
 
 :::
 
-# Как от Nix езикът стигаме до програми?
+# Как от Nix езика стигаме до програми?
 
 - Последно създавахме пакети чрез `writeTextFile`, `writeShellApplication` и `mkShell`
 
@@ -78,7 +78,7 @@ date: 15.04.2025
 
 ---
 
-### Nix функцията ~myWriteTextFile.nix~
+### Nix функцията `myWriteTextFile.nix`
 
 ```nix
 myWriteTextFile = { name, text }:
@@ -90,7 +90,7 @@ myWriteTextFile = { name, text }:
   };
 ```
 
-### `build` скрипта ~myWriteTextFile.sh~
+### `build` скрипта `myWriteTextFile.sh`
 
 ```bash
 #!/bin/sh
@@ -122,13 +122,14 @@ printf "$1" > "$out"
 - Нуждаем се от `/nix/store` пътищата на на 3 програми - `bash`, `curl` и `cloc`
 
 - Програми в `nixpkgs` могат имплицитно да се конвертират към низове
+  (защото са атрибутни множества с *метод* `__toString`)
 
 - Тези низове сочат към `/nix/store/HASH-PROGRAM-VERSION`.
-  Вътре, под `bin` директорията се намира изпълнимият файл.
+  Вътре, под `bin` директорията се намира изпълнимия файл.
 
 ---
 
-### Nix функцията ~myWriteShellApplication.nix~
+### Nix функцията `myWriteShellApplication.nix`
 
 ```nix
 myWriteShellApplication = { name, text, runtimeInputs ? [] }:
@@ -146,7 +147,7 @@ myWriteShellApplication = { name, text, runtimeInputs ? [] }:
 
 ---
 
-### `build` скрипта ~myWriteShellApplication.sh~
+### `build` скрипта `myWriteShellApplication.sh`
 
 ```bash
 mkdir -p "$out/bin"
@@ -189,7 +190,7 @@ chmod +x "$out/bin/$3"
 
 ---
 
-### Nix функцията ~myMkShell.nix~
+### Nix функцията `myMkShell.nix`
 
 ```nix
 myMkShell = { packages, shellHook ? "" }:
@@ -208,7 +209,7 @@ myMkShell = { packages, shellHook ? "" }:
 
 ---
 
-### `setup` скрипта ~myMkShell/setup~
+### `setup` скрипта `myMkShell/setup`
 
 ```bash
 #!/bin/sh
@@ -256,23 +257,23 @@ $HOOK
 
 ## Атрибути свързани с фази
 
-- Всяка фаза се определя от атрибутът `namePhase` (`name` е едно от `unpack`, `patch`, `configure`, ...)
+- Всяка фаза се определя от атрибутът `${name}Phase` (където `${name}` варира през `unpack`, `patch`, `configure`, ...)
 
 - Стойността му е низ, съдържащ shell скрипт с нужните действия (вместо да имаме файлове, имаме низове)
 
-- `preName` и `postName` съответно се изпълняват преди или след дадената фаза.
+- `pre${name}` и `post${name}` съответно се изпълняват преди или след дадената фаза (примерно `postBuild`, `preCheck`).
    Особено полезно за функции над `mkDerivation`.
 
 ---
 
-- `dontName` е булева стойност, отразяваща дали дадената фаза да се изпълни.
+- `dont${name}` е булева стойност, отразяваща дали дадената фаза да се изпълни.
 
   - Валидно е само за фазите, които се изпълняват по подразбиране
-  - За другите (`check`), имаме `doName`
+  - За другите (`check`), имаме `do${name}`
 
 - Някои фази имат свои си атрибути:
   - Patch Phase: `patches`, списък от [patch файлове](https://en.wikipedia.org/wiki/Patch_%28Unix%29) които ще се сложат върху сорса
-  - Configure Phase: `configureScript`, име на конфигурационен скрипт
+  - Configure Phase: `configureScript`, име на [конфигурационен скрипт](https://en.wikipedia.org/wiki/Configure_script)
 
 # Употреба
 
@@ -283,7 +284,7 @@ $HOOK
 
 ## `writeTextFile`
 
-### Функцията ~new_myWriteTextFile.nix~
+### Функцията `new_myWriteTextFile.nix`
 
 ```nix
 myWriteTextFile = { name, text }:
@@ -300,7 +301,7 @@ myWriteTextFile = { name, text }:
 
 ## `writeShellApplication`
 
-### Функцията ~new_myWriteShellApplication.nix~
+### Функцията `new_myWriteShellApplication.nix`
 
 ```nix
 myWriteShellApplication = { name, text, runtimeInputs ? [] }:
@@ -316,7 +317,7 @@ myWriteShellApplication = { name, text, runtimeInputs ? [] }:
 
 ---
 
-### Функцията ~new_myWriteShellApplication.nix~
+### Функцията `new_myWriteShellApplication.nix`
 
 ```nix
 ...
@@ -337,7 +338,7 @@ myWriteShellApplication = { name, text, runtimeInputs ? [] }:
 
 ---
 
-### Функцията ~new_myWriteShellApplication.nix~
+### Функцията `new_myWriteShellApplication.nix`
 
 ```nix
 ...
@@ -352,7 +353,7 @@ myWriteShellApplication = { name, text, runtimeInputs ? [] }:
 
 ## `mkShell`
 
-### Функцията ~new_myMkShell.nix~
+### Функцията `new_myMkShell.nix`
 
 ```nix
 myMkShell = { packages, shellHook ? "" }:
@@ -374,7 +375,7 @@ myMkShell = { packages, shellHook ? "" }:
 
 - В момента `src` го слагаме на `./.`
 
-- В реалния свят, почти всички програми не идват с готов конфигуриран Nix
+- В реалния свят, почти няма програми, които да идват с готов, конфигуриран Nix
 
 - Искаме `src` да бъде нещо от интернет: файл, GitHub хранилище, ...
 
@@ -388,22 +389,24 @@ myMkShell = { packages, shellHook ? "" }:
 
 - Не можем да сме сигурни, че ресурсът на даден линк ще остане същия вовеки веков
 
-- Понеже този ресурс е част от входът, то той определя хешът.
+- Понеже този ресурс е част от входът, то той определя хеш.
   Ако ресурса на дадения линк се промени, то и хешът ще се спрямо това кога пускаме `nix-build`.
 
 - Решение няма!
 
-- Има заобиколка обаче: ще съхраняваме хешът на ресурса и ще го проверяваме.
+- Има заобиколка обаче: ще съхраняваме [хеша на ресурса](https://wiki.nixos.org/wiki/Nix_Hash) и ще го проверяваме.
   Така поне ще знаем ако се е променил.
 
 ---
 
-- Как ще намерим хешът?
+- Как ще намерим хеша?
 
 - Можем ръчно през `nix-hash`, но това означава допълнително да си теглим ресурса, да пускаме командата, и т.н.
 
-- На практика, всички оставят хешът празен.
-  Nix гръмва с грешка "очаквах този хеш", и така направо копираме това което Nix иска.
+- На практика, всички оставят хеша празен.
+  Nix гръмва с грешка "очаквах този хеш", и така направо копираме това, което Nix иска.
+
+- Тази идея се разглежда по-подробно от така-нарачените [Fixed-Output Derivations](https://nix.dev/manual/nix/2.24/glossary#gloss-fixed-output-derivation), които няма да разглеждаме изкъсо сега.
 
 ## `fetchurl`
 
@@ -424,15 +427,17 @@ fetchurl {
 
 ## Пример
 
-- Нека направим деривация, която изтегля една уеб страница, конвертира я към нормален тест и резултата е текстовия файл
+- Нека направим деривация, която изтегля една уеб страница, конвертира я към нормален текст, който го записва в резултатния файл
 
 - Конвертирането може да стане с командата `html2text`
 
 - Нека страницата да бъде `https://danluu.com/web-bloat/index.html` и да кръстим пакета "web-bloat"
 
+- Нека приемем, че името на резултатния файл няма кавички в себе си, т.е. можем директно да го интерполираме в шел команда (нормално е хубаво да следим за тези неща и да ползваме функции от `nixpkgs`, като `escapeShellArg`, че да се предпазваме от injection атаки)
+
 ---
 
-### Пакетът ~web-bloat.nix~
+### Пакетът `web-bloat.nix`
 
 ```nix
 stdenv.mkDerivation {
@@ -457,7 +462,7 @@ stdenv.mkDerivation {
 
 - `fetchzip` работи почти като `fetchurl`, обаче също очаква подадения URL да е към архив, който той да разархивира
 
-- Автоматично се сеща за типа архив.
+- Автоматично се усеща за типа архив.
   Въпреки името, поддържа всякакви архивни формати.
 
 ## Пример
@@ -466,12 +471,12 @@ stdenv.mkDerivation {
 
 - Ще изтеглим сорс кода от `https://invisible-mirror.net/archives/mawk/mawk-1.3.4-20240819.tgz`
 
-- Трябва ни `gcc` компилаторът.
+- Трябва ни `gcc` компилатора.
   Идва със скрипт, който се прилага от `make` командата.
 
 ---
 
-### Пакетът ~mawk.nix~
+### Пакетът `mawk.nix`
 
 ```nix
 stdenv.mkDerivation {
@@ -529,7 +534,7 @@ stdenv.mkDerivation {
 
 ---
 
-### Пакетът ~rust-hello-world.nix~
+### Пакетът `rust-hello-world.nix`
 
 ```nix
 stdenv.mkDerivation {
