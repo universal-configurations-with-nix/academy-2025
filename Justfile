@@ -14,6 +14,9 @@ alias bpa := build-all-presentable
 alias build-slide-presentable := build-presentable-slide
 alias build-presentable-all   := build-all-presentable
 
+alias h     := help
+alias about := help
+
 [no-cd]
 default:
   [ -f '{{join(".", "main.md")}}' ] && just build || just build-all
@@ -76,3 +79,42 @@ notes:
   awk '/^#/ { match($0, /^#+/); if (RLENGTH != l) c = 1; l = RLENGTH; sub(/# /, "&" ((l == 1) ? "Лекция " ++tc ")" : c++ ".") " ") } 1' ./notes/structure.md > temp
   mv temp ./notes/structure.md
   pandoc ./notes/structure.md -f markdown -t pdf --pdf-engine=xelatex -V mainfont="Liberation Serif" -V linkcolor="blue" -s -o ./notes/structure.pdf
+
+help:
+  #!/usr/bin/env sh
+  bold=$(echo -e '\033[1m')
+  green=$(echo -e '\033[32m')
+  yellow=$(echo -e '\033[33m')
+  res=$(echo -e '\033[0m')
+  cat <<EOF
+  ${bold}${green}RELATIVE TO CURRENT/WORKING DIRECTORY${res}
+
+    ${green}b     ${yellow}[MD_FILE_PATH] [OUTPUT_DIRECTORY]${res}
+    ${green}build ${yellow}[MD_FILE_PATH] [OUTPUT_DIRECTORY]${res}
+        Convert Markdown file to PDF
+
+    ${green}bp                ${yellow}[MD_FILE_PATH] [OUTPUT_DIRECTORY]${res}
+    ${green}build-presentable ${yellow}[MD_FILE_PATH] [OUTPUT_DIRECTORY]${res}
+        Convert Markdown file to PDF, where unordered lists are incremental and
+        bottom-right navbar is inserted
+
+  ${bold}${green}RELATIVE TO REPOSITORY ROOT DIRECTORY${res}
+
+    ${green}bs          ${yellow}[PRESENTATION_NUMBER] [OUTPUT_DIRECTORY]${res}
+    ${green}build-slide ${yellow}[PRESENTATION_NUMBER] [OUTPUT_DIRECTORY]${res}
+        Convert presentation to PDF
+
+    ${green}bsp                     ${yellow}[PRESENTATION_NUMBER] [OUTPUT_DIRECTORY]${res}
+    ${green}build-slide-presentable ${yellow}[PRESENTATION_NUMBER] [OUTPUT_DIRECTORY]${res}
+        Convert presentation to PDF, where unordered lists are incremental and
+        bottom-right navbar is inserted
+
+    ${green}ba        ${yellow}[OUTPUT_DIRECTORY]${res}
+    ${green}build-all ${yellow}[OUTPUT_DIRECTORY]${res}
+        Convert all presentations to PDF files
+
+    ${green}bap                   ${yellow}[OUTPUT_DIRECTORY]${res}
+    ${green}build-all-presentable ${yellow}[OUTPUT_DIRECTORY]${res}
+        Convert all presentations to PDF files, where unordered lists are
+        incremental and bottom-right navbar is inserted
+  EOF
