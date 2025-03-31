@@ -78,7 +78,7 @@ date: 22.04.2025
 
 ---
 
-### Пакет ~fzf.nix~
+### Пакет `fzf.nix`
 
 ```nix
 buildGoModule rec {
@@ -111,7 +111,7 @@ buildGoModule rec {
 
 ---
 
-### Пакет ~ts.nix~
+### Пакет `ts.nix`
 
 ```nix
 buildGoModule rec {
@@ -149,7 +149,7 @@ buildGoModule rec {
 
 ---
 
-### Пакет ~cloak.nix~
+### Пакет `cloak.nix`
 
 ```nix
 rustPlatform.buildRustPackage rec {
@@ -242,7 +242,7 @@ rustPlatform.buildRustPackage rec {
 
 ---
 
-### Пакет ~lorsrf.nix~
+### Пакет `lorsrf.nix`
 
 ```nix
 rustPlatform.buildRustPackage rec {
@@ -319,7 +319,7 @@ rustPlatform.buildRustPackage rec {
 
 ---
 
-### Пакет ~WaveFunctionCollapse.nix~
+### Пакет `WaveFunctionCollapse.nix`
 
 ```nix
 buildDotnetModule {
@@ -354,7 +354,7 @@ buildDotnetModule {
 
 ---
 
-### Пакетът ~lester.nix~
+### Пакетът `lester.nix`
 
 ```nix
 buildNimPackage {
@@ -403,7 +403,7 @@ buildNimPackage {
 
 ---
 
-### Пакет ~rpi-backlight.nix~
+### Пакет `rpi-backlight.nix`
 
 ```nix
 with python3Packages;
@@ -426,7 +426,7 @@ buildPythonApplication rec {
 
 ---
 
-### Пакет ~english_text_normalization.nix~
+### Пакет `english_text_normalization.nix`
 
 ```nix
 with python3Packages;
