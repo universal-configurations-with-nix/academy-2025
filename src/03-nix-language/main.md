@@ -13,6 +13,33 @@ date: 08.04.2025
 
 :::
 
+---
+
+- Миналия път `nix-collect-garbage` не проработи. Защо?
+
+- `nix-build` добавя *символична връзка* `result` в текущата директория, сочеща към резултата в `/nix/store`
+
+- Тази връзка **се добавя в roots**, произволна връзка не работи.
+
+- И затова `nix-build` не казва "the result might be removed by the garbage collector", както `nix-instantiate`
+
+---
+
+```sh
+nix-build ./text.nix
+nix-collect-garbage -d # Не бърника /nix/store/...-something.txt
+
+rm result
+nix-collect-garbage -d # Вече премахва /nix/store/...-something.txt
+```
+
+### Пример ~text.nix~
+
+```nix
+with import <nixpkgs> { };
+writeTextFile { name = "something.txt"; text = "Hello!"; }
+```
+
 # Защо ни трябва нов език?
 
 ## Скриптиращи езици - bash/powershell/...
