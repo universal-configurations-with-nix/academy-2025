@@ -16,14 +16,15 @@ date: 08.05.2025
 
 - Модул е функция, която приема и връща атрибутно множество
 
-- Приетото има 2 *нужни* атрибута
+- Приетото съдържа следните атрибути (могат да се изпускат тези, които не са ни потребни)
 
   - `config` - **всички константни** стойности на атрибути в системата
-  - `pkgs`   - пакетите в системата
+  - `pkgs` - пакетите в системата
+  - `lib` - `nixpkgs` библиотеката
 
-- Върнатото има 3 задължителни атрибута
+- Върнатото има 3 задължителни атрибута (с известно количество опционална синтактична захар)
 
-  - `imports` - списък с пътища към други модули
+  - `imports` - списък с допълнителни модули (или пътища към такива)
   - `options` - имена и типове на позволените стойности
   - `config`  - атрибути и стойности в системата
 
@@ -32,10 +33,10 @@ date: 08.05.2025
 ### Примерен модул
 
   ```nix
-  { config, pkgs, ... }: {
+  { config, pkgs, lib, ... }: {
     options = {
-      includeCurl = pkgs.lib.mkOption {
-        type = pkgs.lib.types.bool;
+      includeCurl = lib.mkOption {
+        type = lib.types.bool;
         description = "Should curl be added as a global package";
       };
     };
@@ -106,7 +107,7 @@ date: 08.05.2025
 
   **Първата** NixOS версия от която създаваме конфигурацията.
   Използва се за поддържане на съвмествимост.
-  **Никога** не трябва да се променя!
+  (Почти) никога не трябва да се променя!
 
 ## Да пуснем виртуална машина!
 
@@ -123,14 +124,17 @@ date: 08.05.2025
 - Трябва да добавим в конфигурацията си потребител:
 
   ```nix
-  users.users.ПОТРЕБИТЕЛСКО_ИМЕ = {
-    isNormalUser = true;         # Дали е истински потребител
-    extraGroups = [ "wheel" ];   # Дали има административни права
-    initialPassword = "test";    # Парола
-  };
+  {
+    users.users.${username} = {
+      isNormalUser = true;         # Дали е истински потребител
+      extraGroups = [ "wheel" ];   # Дали има административни права
+      initialPassword = "test";    # Парола
+    };
+  }
   ```
 
 - Нека за целта на слайдовете да го кръстим `john`
+- Отделните потребители са под `users.users`, понеже само под `users` ще видим някои глобални опции, отнасящи се за всички потребители, а именно:
 
 ---
 
@@ -167,15 +171,15 @@ date: 08.05.2025
 
 ## Добавяне на пакети
 
-- Нека да добавим командовото приложение `fastfetch`.
+- Нека да добавим приложението `fastfetch`.
   Има две места на които можем да го вмъкнем:
 
   1. `users.users.john.packages`
 
-     В сички програми са налични само за потребителя
+     Всички програми са налични само за потребителя
   2. `environment.systemPackages`
 
-     В сички програми са налични глобално, за всички потребители
+     Всички програми са налични глобално, за всички потребители
 
 ## Добавяне на графична среда
 
@@ -186,7 +190,7 @@ date: 08.05.2025
   - `services.xserver.desktopManager.gnome` за [Gnome](https://www.gnome.org/)
   - `services.xserver.desktopManager.cinnamon` за [Cinnamon](https://projects.linuxmint.com/cinnamon/)
   - `services.desktopManager.plasma6` за [Plasma desktop (KDE)](https://kde.org/plasma-desktop/)\
-    *(трябват още някои атрибути, подробности [тук](https://nixos.wiki/wiki/KDE))*
+    *(трябват още някои атрибути, подробности [тук](https://wiki.nixos.org/wiki/KDE))*
   - ...
 
 ---
@@ -213,13 +217,16 @@ date: 08.05.2025
 - Тези неща се наричат "desktop environment": предоставят графичната среда и програми с нея
 
 - Обаче в една система може да имаме няколко графични среди.
-  Затова отделно се правят менижиращи "display manager" програми, които ни логват и ни позволяват да си изберем среда.
+  Затова отделно се правят менажиращи "display manager" програми, които ни логват и ни позволяват да си изберем среда.
 
-- Най-популярния от тези е [LightDM](https://en.wikipedia.org/wiki/LightDM).
+- Най-популярният от тези е [LightDM](https://en.wikipedia.org/wiki/LightDM).
   Той е включен по подразбиране, само трябва да добавим:
 
   ```nix
-  services.xserver.enable = true;
+  {
+    services.xserver.enable = true;
+    # services.displayManager.lightdm.enable = true;
+  }
   ```
 
 ---
@@ -227,9 +234,11 @@ date: 08.05.2025
 - Нека да добавим и две от тях - `firefox` (уеб браузър) и `copyq` (история на копиранията)
 
   ```nix
-  users.users.john.packages = with pkgs; [
-    firefox copyq
-  ];
+  {
+    users.users.john.packages = with pkgs; [
+      firefox copyq
+    ];
+  }
   ```
 
 ## Български език
@@ -241,11 +250,13 @@ date: 08.05.2025
 - Има Nix атрибути над нея:
 
   ```nix
-  services.xserver.xkb = {
-    layout = "us,bg";                 # Английска и българска клавиатура
-    variant = ",phonetic";            # QWERTY и ЯВЕРТЪ варианти
-    options = "grp:alt_shift_toggle"; # Смяна на език с Alt+Shift
-  };
+  {
+    services.xserver.xkb = {
+      layout = "us,bg";                 # Английска и българска клавиатура
+      variant = ",phonetic";            # QWERTY и ЯВЕРТЪ варианти
+      options = "grp:alt_shift_toggle"; # Смяна на език с Alt+Shift
+    };
+  }
   ```
 
 # Писане на модули
@@ -264,7 +275,13 @@ date: 08.05.2025
 - В нашия `configuration.nix` ще "извикаме" тези модули:
 
   ```nix
-  import = [ ./boot.nix ./john.nix ./graphics_environment.nix ];
+  {
+    imports = [
+      ./boot.nix
+      ./john.nix
+      ./graphics_environment.nix
+    ];
+  }
   ```
 
 ## Модул с нов атрибут
@@ -278,10 +295,8 @@ date: 08.05.2025
 ### Решение
 
 ```nix
-{ config, pkgs, ... }:
-let
-  lib = pkgs.lib;
-in {
+{ config, pkgs, lib, ... }:
+{
   options = with lib; {
     hello = mkOption {
       type = types.bool;
@@ -289,7 +304,8 @@ in {
   };
   config = {
     environment.systemPackages =
-      if config.hello then [ pkgs.hello ]
+      if config.hello
+      then [ pkgs.hello ]
       else [];
   };
 }
@@ -308,10 +324,8 @@ in {
 ### Решение
 
 ```nix
-{ config, pkgs, ... }:
-let
-  lib = pkgs.lib;
-in {
+{ config, pkgs, lib, ... }:
+{
   options = with lib; {
     addDemoUser = mkOption { type = types.bool; default = false; };
     demoUserName = mkOption { type = types.string; default = "demo"; };
@@ -341,7 +355,7 @@ in {
 
 ## Бърз увод в systemd сървиси
 
-- Всеки сървис (по-принцип) се дефинира в един текстов файл
+- Всеки сървис (по-принцип) се дефинира в един [текстов файл](https://www.freedesktop.org/software/systemd/man/latest/systemd.syntax.html#)
 
 - Този текстов файл съдържа
 
@@ -359,7 +373,7 @@ in {
 
 ### Пример
 
-```service
+```ini
 [Unit]
 After=network.target
 Before=nextcloud.service
@@ -392,18 +406,21 @@ RequiredBy=network.target
 - Подобно на `setxkbmap`, можем да пишем systemd сървиси чрез Nix изрази:
 
   ```nix
-  systemd.services = {
-    lxqt-policykit = {
-      description = "lxqt-policykit runner";
-      after = [ "graphical-session.target" ];
-  
-      serviceConfig = {
-        Type = "simple";
-        ExecStart = "${pkgs.lxqt.lxqt-policykit}/bin/lxqt-policykit-agent";
-        Restart = "on-failure";
-        RestartSec = 1;
+  {
+    systemd.services = {
+      lxqt-policykit = {
+        description = "lxqt-policykit runner";
+        after = [ "graphical-session.target" ];
+
+        serviceConfig = {
+          Type = "simple";
+          ExecStart = "${pkgs.lxqt.lxqt-policykit}/bin/lxqt-policykit-agent";
+          Restart = "on-failure";
+          RestartSec = 1;
+        };
       };
     };
+  }
   ```
 
 # Въпроси?

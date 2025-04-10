@@ -1,7 +1,5 @@
-{ config, pkgs, ... }:
-let
-  lib = pkgs.lib;
-in {
+{ config, pkgs, lib, ... }:
+{
   options = with lib; {
     hello = mkOption {
       type = types.bool;

@@ -60,7 +60,7 @@ build-slide number output_dir="." *EXTRA_ARGS="": (_build-slide 'build' number o
 build-presentable-slide number output_dir="." *EXTRA_ARGS="": (_build-slide 'build-presentable' number output_dir EXTRA_ARGS)
 
 _build-slide type number output_dir="." *EXTRA_ARGS="":
-  just {{type}} {{join(src_dir, "0*" + number + "*", "main.md")}} {{output_dir}} {{EXTRA_ARGS}}
+  just {{type}} {{join(src_dir, number + "*", "main.md")}} {{output_dir}} {{EXTRA_ARGS}}
 
 # Build all presentations in SRC
 build-all output_dir=join(justfile_directory(), "slides") *EXTRA_ARGS="":
@@ -73,6 +73,18 @@ build-all output_dir=join(justfile_directory(), "slides") *EXTRA_ARGS="":
 
 # Like build-all, but build-presentable is used for each slide
 build-all-presentable output_dir=join(justfile_directory(), "present"): (build-all output_dir "-i" "-V navigation=horizontal")
+
+# Open the N-th PDF in the slides/ directory with zathura
+[no-cd]
+open-slide number:
+  #!/usr/bin/env sh
+  pdf=$(find slides/ -maxdepth 1 -type f -name '*.pdf' | sort | sed -n "${number}p")
+  if [ -z "$pdf" ]; then
+    echo "No PDF found at index $number" >&2
+    exit 1
+  fi
+  echo "Opening $pdf..."
+  zathura "$pdf"
 
 notes:
   nvim -V1 -Es -u '~/.config/nvim/init.lua' +":Neorg export to-file ./notes/structure.md" ./notes/structure.norg

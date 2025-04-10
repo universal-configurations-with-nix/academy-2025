@@ -36,6 +36,7 @@
                   cyrillic
                   ;
               })
+              zathura
             ];
           };
         };
