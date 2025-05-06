@@ -1,6 +1,7 @@
 # Nix artifacts
 result
 /.direnv/
+*.qcow2
 
 # Output artifacts
 *.pdf
