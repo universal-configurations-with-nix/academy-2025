@@ -23,7 +23,8 @@ date: 13.05.2025
 - Командата за пускане на виртуална машина е:
 
   ```sh
-  nix-build '<nixpkgs/nixos>' -A vm -I nixpkgs=channel:nixos-24.11 -I nixos-config=./configuration.nix
+  nix-build '<nixpkgs/nixos>' -A vm -I nixpkgs=channel:nixos-24.11
+  -I nixos-config=./configuration.nix
   ```
 
 ## Прости конфигурации
