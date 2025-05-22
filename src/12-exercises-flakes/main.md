@@ -114,6 +114,8 @@ Apple,Looking,At
 Всеки пакет трябва да може да бъде компилиран чрез `nix build` и пуснат чрез `nix run`.
 Примерно: `nix run .#cloak`
 
+**Упътване:** Може да използвате [`callPackage`](https://nix.dev/tutorials/callpackage.html) функцията
+
 ---
 
 **Задача 5:** Реализирайте flake, който приема [`nixpkgs`](https://github.com/NixOS/nixpkgs) и връща две NixOS конфигурации.
