@@ -1,0 +1,42 @@
+{
+  "nodes": {
+    "ex1": {
+      "locked": {
+        "lastModified": 1,
+        "narHash": "sha256-0/efboQ77vLjhvpDZQ2Vtuc1RGwm6ZIkqVgLYqtA3HU=",
+        "path": "../ex1",
+        "type": "path"
+      },
+      "original": {
+        "path": "../ex1",
+        "type": "path"
+      }
+    },
+    "ex2": {
+      "inputs": {
+        "ex1": "ex1"
+      },
+      "locked": {
+        "lastModified": 1,
+        "narHash": "sha256-F0uF7SGt9e2XUv4ZdbRNYT26c0H0g+evbFW0kyT/GpQ=",
+        "path": "../ex2",
+        "type": "path"
+      },
+      "original": {
+        "path": "../ex2",
+        "type": "path"
+      }
+    },
+    "root": {
+      "inputs": {
+        "ex1": [
+          "ex2",
+          "ex1"
+        ],
+        "ex2": "ex2"
+      }
+    }
+  },
+  "root": "root",
+  "version": 7
+}

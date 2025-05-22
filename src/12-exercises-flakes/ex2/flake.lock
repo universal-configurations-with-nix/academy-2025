@@ -1,0 +1,23 @@
+{
+  "nodes": {
+    "ex1": {
+      "locked": {
+        "lastModified": 1,
+        "narHash": "sha256-0/efboQ77vLjhvpDZQ2Vtuc1RGwm6ZIkqVgLYqtA3HU=",
+        "path": "../ex1",
+        "type": "path"
+      },
+      "original": {
+        "path": "../ex1",
+        "type": "path"
+      }
+    },
+    "root": {
+      "inputs": {
+        "ex1": "ex1"
+      }
+    }
+  },
+  "root": "root",
+  "version": 7
+}
