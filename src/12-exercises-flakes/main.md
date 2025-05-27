@@ -125,6 +125,27 @@ Apple,Looking,At
 
 ---
 
+Може да компилирате виртуална машина за конфигурация чрез \
+`nixos-rebuild build-vm --flake .#smiths` или \
+`nixos-rebuild build-vm --flake .#johnny`
+
+Пускането на виртуалната машина става чрез `./result/bin/run-nixos-vm`.
+
+Най-вероятно нямате командата `nixos-rebuild`.
+Най-лесния начин да си я докарате в shell е постаро му чрез `nix-shell`:
+
+```sh
+nix-shell -p nixos-rebuild
+```
+
+или чрез новия `nix shell`:
+
+```sh
+nix shell nixpkgs#nixos-rebuild
+```
+
+---
+
 **Задача 6:** Към flake-а от предходната задача добавете като изход модулите `international` и `rust-dev-improved`, които бяха дефинирани в задачи 7 и 8 от занятие (упражнение) 10 "Изграждане на системи върху NixOS" (може да намерите решения на задачите [тук](https://github.com/universal-configurations-with-nix/academy-2025/tree/main/src/10-exercises-nixos)).
 
 ---
