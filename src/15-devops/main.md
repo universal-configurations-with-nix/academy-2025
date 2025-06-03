@@ -101,6 +101,130 @@ date: 03.06.2025
   \
   *Звучи ли ви познато?*
 
+# CI/CD чрез GitHub Actions
+
+- GitHub има вградена функционалност за автоматизирани процеси
+
+- Милиони хранилища и стотици компании използват това, включително [blocksense](https://github.com/blocksense-network/blocksense)
+
+## Въведение в GitHub Actions
+
+- Пишем YAML файлове в `.github/workflows` директория на нашето хранилище
+
+- Всеки файл описва редица задачи, които трябва да се изпълнят, и кога тези задачи да се изпълнят
+
+- Всяка задача описва редица стъпки *(скриптове)*, които трябва да се изпълнят върху определена виртуална машина
+
+---
+
+### Пример
+
+```yaml
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch: # Ръчно пускане
+
+jobs:
+  Cargo-Version:
+    runs-on: ubuntu-latest
+    steps:
+      - run: sudo apt install -y cargo
+      - run: cargo --version
+```
+
+## Actions
+
+- Първи проблем: в много ситуации нужните стъпки ще се повтарят.
+  Изтегляне на файлове, конфигурация на средата, ...
+
+- Можем да напишем **action**, това е (най-често) една голяма JavaScript програма
+
+- Извикяваме я на мястото на стъпка, вместо `run` използваме `uses`
+
+- Можем да добвяме аргументи
+
+---
+
+### Пример
+
+```yaml
+steps:
+  - uses: actions/checkout@v4
+  - uses: rymndhng/release-on-push-action@master
+    env:
+      GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
+    with:
+      bump_version_scheme: norelease
+```
+
+## Вход/изход и артефакти
+
+- Втори проблем: как да пренесем резултатите от една задача на друга?
+
+- Всяка задача се изпълнява в изолирана виртуална машина, която **има достъп до интернет**
+
+- Можем да качим резултатни файлове в някакъв "облак", в една задача и да ги изтеглим в друга
+
+- GitHub предоставят такова облачно пространство безплатно\* и наричат файловете, които ще пренесем между задачи **артефакти**
+
+---
+
+### Пример
+
+```yaml
+First-Job:
+  steps:
+    ...
+    - uses: actions/upload-artifact@v3
+      with:
+        name: something
+        path: ./path/inside/job/vm
+
+Second-Job:
+  steps:
+    - uses: actions/download-artifact@v3
+      with:
+        name: something
+        path: ./path/to/place/artifact
+    ...
+```
+
+## Редица на изпълнение на задачи
+
+- Трети проблем: `Second-Job` трябва да се изпълни *след* `First-Job`
+
+- За всяка задача можем да предоставим `needs` -- списък със задачи, които трябва да са завършили преди текущата да се изпълни
+
+---
+
+### Пример
+
+```yaml
+First-Job:
+  - steps:
+    ...
+
+Second-Job:
+  - needs: First-Job
+  - steps:
+    ...
+
+Third-Job:
+  - needs: [ First-Job, Second-Job ]
+  - steps:
+    ...
+```
+
+## Actions таб над хранилища
+
+- Всяко GitHub хранилище (в което е включено) съдържа специален таб/подстраница на име "Actions"
+
+- В нея се вижда, за всеки workflow файл, всяко негово изпълнение и данни за изпълнението вътре
+
+- Нека да разгледаме този на [blocksense](https://github.com/blocksense-network/blocksense/actions)
+
 # DevOps в Nix
 
 - Нямаме време да разгледаме всичко (и не всичко е напълно решен проблем)
@@ -109,9 +233,19 @@ date: 03.06.2025
 
 ## Популярни библиотеки
 
-TODO
+[nixops4](https://github.com/nixops4/nixops4)
+: Автоматизиран deployment на NixOS машини в мрежа или облак
 
-# Ръчен DevOps
+[terranix](https://terranix.org/)
+: Дефиниране на [Terraform](https://developer.hashicorp.com/terraform) конфигурации (IaC) през Nix
+
+[deploy-rs](https://github.com/serokell/deploy-rs)
+: Автоматизиран deployment на Nix flake-ове
+
+[colmena](https://github.com/zhaofengli/colmena)
+: Модерен автоматизиран deployment на NixOS машини
+
+# Ръчен DevOps чрез Nix
 
 ## Как Nix се включва в DevOps фазите?
 
